@@ -7,36 +7,33 @@
 
 class Object {
     public:
-    	Object(float p_x, float p_y, Spritesheet p_spritesheet, float rate);
+        Object(float p_x, float p_y, Spritesheet p_spritesheet, float rate);
 
-    	float getX();
-    	float getY();
+        float getX();
+        float getY();
 
-    	void setX(float p_x);
-    	void setY(float p_y);
+        void setX(float p_x);
+        void setY(float p_y);
 
         int getCurrentFrame();
 
-    	void nextFrame();
+        void nextFrame();
         void animate(float deltatime);
         void changeSpritesheet(Spritesheet p_sprites);
 
         int getOriginalHeight();
 
-    	SDL_Texture* getCurrentSprite();
-    	SDL_Rect getCurrentRect();
+        SDL_Texture* getCurrentSprite();
+        SDL_Rect getCurrentRect();
 
     private:
-    	float x, y;
+        float x, y;
         int w, h;
         float animationRate;
-
-        float time = 0;
+        float time;
         int originalHeight;
-
-    	int frame = 0;
-    	SDL_Texture* currentSprite;
-    	SDL_Rect currentRect;
-
-    	Spritesheet sprites;
+        int frame;
+        SDL_Texture* currentSprite;
+        SDL_Rect currentRect;
+        Spritesheet sprites;
 };

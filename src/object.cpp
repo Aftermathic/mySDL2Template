@@ -7,44 +7,34 @@
 #include "spritesheet.hpp"
 
 Object::Object(float p_x, float p_y, Spritesheet p_spritesheet, float rate)
-    :sprites(p_spritesheet) 
+    : x(p_x), y(p_y), w(p_spritesheet.getWidth()), h(p_spritesheet.getHeight()),
+      animationRate(rate), time(0), originalHeight(p_spritesheet.getHeight()),
+      frame(0), currentSprite(p_spritesheet.getSpritesheet()), sprites(p_spritesheet)
 {
-    frame = 0;
-
-    x = p_x;
-    y = p_y;
-    animationRate = rate;
-    w = sprites.getWidth();
-    h = sprites.getHeight();
-
-    originalHeight = sprites.getHeight();
-
-    currentRect.x = x;
-    currentRect.y = y;
+    currentRect.x = static_cast<int>(x);
+    currentRect.y = static_cast<int>(y);
     currentRect.w = w;
     currentRect.h = h;
-
-    currentSprite = sprites.getSpritesheet();
 }
 
 float Object::getX() {
-	return x;
+    return x;
 }
 
 float Object::getY() {
-	return y;
+    return y;
 }
 
 void Object::setX(float p_x) {
-	x = p_x;
+    x = p_x;
 }
 
 void Object::setY(float p_y) {
-	y = p_y;
+    y = p_y;
 }
 
 int Object::getOriginalHeight() {
-	return originalHeight;
+    return originalHeight;
 }
 
 void Object::nextFrame() {
@@ -53,48 +43,47 @@ void Object::nextFrame() {
         frame = 0;
     }
 
-    currentRect.y = y + h * frame;
+    currentRect.y = static_cast<int>(y) + h * frame;
     currentSprite = sprites.getSpritesheet();
 }
 
 void Object::animate(float deltatime) {
-	time = time + deltatime;
-	if (time >= animationRate) {
-		frame++;
-		if (frame >= sprites.getNumberOfFrames()) {
-			frame = 0;
-		}
+    time += deltatime;
+    if (time >= animationRate) {
+        frame++;
+        if (frame >= sprites.getNumberOfFrames()) {
+            frame = 0;
+        }
+        time = 0;
+    }
 
-		time = 0;
-	}
-
-    currentRect.y = y + h * frame;
+    currentRect.y = static_cast<int>(y) + h * frame;
     currentSprite = sprites.getSpritesheet();
 }
 
 int Object::getCurrentFrame() {
-	return frame;
+    return frame;
 }
 
 void Object::changeSpritesheet(Spritesheet p_sprites) {
-	sprites = p_sprites;
-	frame = 0;
+    sprites = p_sprites;
+    frame = 0;
 
-	w = sprites.getWidth();
-	h = sprites.getHeight() * frame;
+    w = sprites.getWidth();
+    h = sprites.getHeight();
 
-	currentRect.x = x;
-	currentRect.y = y;
-	currentRect.w = w;
-	currentRect.h = h;
+    currentRect.x = static_cast<int>(x);
+    currentRect.y = static_cast<int>(y);
+    currentRect.w = w;
+    currentRect.h = h;
 
-	currentSprite = sprites.getSpritesheet();
+    currentSprite = sprites.getSpritesheet();
 }
 
 SDL_Texture* Object::getCurrentSprite() {
-	return currentSprite;
+    return currentSprite;
 }
 
 SDL_Rect Object::getCurrentRect() {
-	return currentRect;
+    return currentRect;
 }

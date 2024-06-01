@@ -7,38 +7,38 @@
 #include "object.hpp"
 
 Window::Window(const char* p_title, int p_w, int p_h)
-	:window(NULL), renderer(NULL)
+    : window(NULL), renderer(NULL)
 {
-	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_w, p_h, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_w, p_h, SDL_WINDOW_SHOWN);
 
-	if (window == NULL) {
-		std::cout << "ERROR: " << SDL_GetError() << std::endl;
-	}
+    if (window == NULL) {
+        std::cout << "ERROR: " << SDL_GetError() << std::endl;
+    }
 
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 }
 
 SDL_Texture* Window::loadTexture(const char* p_filePath) {
-	SDL_Texture* texture = NULL;
-	texture = IMG_LoadTexture(renderer, p_filePath);
+    SDL_Texture* texture = NULL;
+    texture = IMG_LoadTexture(renderer, p_filePath);
 
-	if (texture == NULL) {
-		throw "unable to load texture";
-	}
+    if (texture == NULL) {
+        throw "unable to load texture";
+    }
 
-	return texture;
+    return texture;
 }
 
 void Window::render(Object& p_object) {
     SDL_Rect src; 
     src.x = 0;
-    src.y = p_object.getCurrentRect().y;
+    src.y = 0;
     src.w = p_object.getCurrentRect().w;
-    src.h = p_object.getCurrentRect().h;
+    src.h = p_object.getOriginalHeight();
 
     SDL_Rect dst;
-    dst.x = p_object.getX();
-    dst.y = p_object.getY();
+    dst.x = static_cast<int>(p_object.getX());
+    dst.y = static_cast<int>(p_object.getY());
     dst.w = p_object.getCurrentRect().w;
     dst.h = p_object.getCurrentRect().h;
 
@@ -46,17 +46,18 @@ void Window::render(Object& p_object) {
 }
 
 void Window::clear() {
-	SDL_RenderClear(renderer);
+    SDL_RenderClear(renderer);
 }
 
 void Window::display() {
-	SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer);
 }
 
 void Window::setTitle(const char* p_title) {
-	SDL_SetWindowTitle(window, p_title);
+    SDL_SetWindowTitle(window, p_title);
 }
 
 void Window::close() {
-	SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
 }
