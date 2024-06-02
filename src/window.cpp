@@ -13,17 +13,11 @@ Window::Window(const char* p_title, int p_w, int p_h)
 
     if (window == NULL) {
         std::cout << "ERROR: " << SDL_GetError() << std::endl;
-        std::cin.get();
-
-        exit(1);
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == NULL) {
         std::cout << "ERROR: " << SDL_GetError() << std::endl;
-        std::cin.get();
-
-        exit(1);
     }
 }
 
@@ -32,9 +26,6 @@ SDL_Texture* Window::loadTexture(const char* p_filePath) {
 
     if (texture == NULL) {
         std::cout << "Failed to load texture: " << IMG_GetError() << std::endl;
-        std::cin.get();
-
-        exit(1);
     }
 
     return texture;

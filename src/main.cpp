@@ -67,15 +67,9 @@ int main(int argc, char* args[]) {
 
     std::vector<Object> allobjects = {playbtn};
 
-    double counter1 = 0; // max is pi  changes by 0.03
-    double counter2 = 0; // max is pi/2  changes by 0.015
-
     bool gameRunning = true;
     bool clickedPlay = false;
     bool playbuttonGone = false;
-
-    bool goback1 = false;
-    bool goback2 = false;
 
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
@@ -83,40 +77,12 @@ int main(int argc, char* args[]) {
 
     SDL_Event event;
 
+    float velocityX = 500;
+    float velocityY = 400;
+
     while (gameRunning) {
-        SDL_PumpEvents();
-
-        // button stuff
-        if (counter1 >= M_PI) {
-            goback1 = true;
-        }
-
-        if (counter2 >= M_PI / 2) {
-            goback2 = true;
-        }
-
-        if (counter1 <= 0) {
-            goback1 = false;
-        }
-
-        if (counter2 <= 0) {
-            goback2 = false;
-        }
-
-        if (goback1) {
-            counter1 -= 0.001 + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) / (0.01 - 0.001));
-        } 
-        else {
-            counter1 += 0.001 + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) / (0.01 - 0.001));
-        }
-
-        if (goback2) {
-            counter2 -= 0.001 + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) / (0.01 - 0.001));
-        } 
-        else {
-            counter2 += 0.001 + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX) / (0.01 - 0.001));
-        }
-
+    	SDL_PumpEvents();
+    	
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 gameRunning = false;
@@ -136,6 +102,8 @@ int main(int argc, char* args[]) {
                 			clickedPlay = true;
                 			std::cout << "Clicked!" << std::endl;
 
+                			SDL_Delay(1000);
+
                 			if (clickSound) {
                 				Mix_PlayChannel(-1, clickSound, 0);
                 			}
@@ -145,6 +113,8 @@ int main(int argc, char* args[]) {
             }
 
             }
+
+            SDL_PumpEvents();
         }
 
         if (clickedPlay && !playbuttonGone) {
@@ -165,17 +135,22 @@ int main(int argc, char* args[]) {
                 o.animate(deltaTime);
             }
 
-            // more button stuff
-
-            std::random_device dev;
-            std::mt19937 rng(dev());
-            std::uniform_int_distribution<std::mt19937::result_type> dist(1, 5);
-
-            int random_number = dist(rng);
-
             if (num == 0) {
-                o.setX(std::round(1280 * std::sin(counter1 * random_number)));
-                o.setY(std::round(720 * std::sin(counter2 * random_number)));
+                float newX = o.getdX() + velocityX * deltaTime;
+                float newY = o.getdY() + velocityY * deltaTime;
+
+                if (newX <= 0 || newX >= 1280 - playbtnwidth) {
+                    velocityX = -velocityX;
+                    newX = std::max(0.0f, std::min(static_cast<float>(1280 - playbtnwidth), newX));
+                }
+
+                if (newY <= 0 || newY >= 720 - playbtnheight) {
+                    velocityY = -velocityY;
+                    newY = std::max(0.0f, std::min(static_cast<float>(720 - playbtnheight), newY));
+                }
+
+                o.setX(static_cast<int>(newX));
+                o.setY(static_cast<int>(newY));
             }
 
             num++;
