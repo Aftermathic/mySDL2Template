@@ -122,20 +122,28 @@ int main(int argc, char* args[]) {
                 gameRunning = false;
             }
 
+            if (! clickedPlay) {
             if (event.type == SDL_MOUSEBUTTONDOWN && event.button.button == SDL_BUTTON_LEFT) {
                 int mouseX, mouseY;
                 SDL_GetMouseState(&mouseX, &mouseY);
 
                 std::cout << "Mouse clicked at (" << mouseX << ", " << mouseY << ")" << std::endl;
 
-                if (isMouseInside(playbtn, playbtn.getCurrentRect(), mouseX, mouseY)) {
-                    clickedPlay = true;
-                    std::cout << "Play button area clicked." << std::endl;
-                    
-                    if (clickSound) {
-                        Mix_PlayChannel(-1, clickSound, 0);
-                    }
+                int num = 0;
+                for (Object& o : allobjects) {
+                	if (num == 0) {
+                		if (isMouseInside(o, o.getCurrentRect(), mouseX, mouseY)) {
+                			clickedPlay = true;
+                			std::cout << "Clicked!" << std::endl;
+
+                			if (clickSound) {
+                				Mix_PlayChannel(-1, clickSound, 0);
+                			}
+                		}
+                	}
                 }
+            }
+
             }
         }
 
