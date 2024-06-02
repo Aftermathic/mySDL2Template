@@ -7,9 +7,9 @@
 #include "spritesheet.hpp"
 
 Object::Object(float p_x, float p_y, Spritesheet p_spritesheet, float rate)
-    : x(p_x), y(p_y), w(p_spritesheet.getWidth()), h(p_spritesheet.getHeight()),
-      animationRate(rate), time(0), originalHeight(p_spritesheet.getHeight()),
-      frame(0), currentSprite(p_spritesheet.getSpritesheet()), sprites(p_spritesheet)
+    : x(p_x), y(p_y), dstX(p_x), dstY(p_y), w(p_spritesheet.getWidth()), h(p_spritesheet.getHeight()), animationRate(rate),
+      time(0), frame(0), originalHeight(p_spritesheet.getHeight()), currentSprite(p_spritesheet.getSpritesheet()),
+      sprites(p_spritesheet)
 {
     currentRect.x = static_cast<int>(x);
     currentRect.y = static_cast<int>(y);
@@ -25,12 +25,20 @@ float Object::getY() {
     return y;
 }
 
+float Object::getdX() {
+    return dstX;
+}
+
+float Object::getdY() {
+    return dstY;
+}
+
 void Object::setX(float p_x) {
-    x = p_x;
+    dstX = p_x;
 }
 
 void Object::setY(float p_y) {
-    y = p_y;
+    dstY = p_y;
 }
 
 int Object::getOriginalHeight() {
@@ -43,7 +51,7 @@ void Object::nextFrame() {
         frame = 0;
     }
 
-    currentRect.y = static_cast<int>(y) + h * frame;
+    currentRect.y = h * frame;
     currentSprite = sprites.getSpritesheet();
 }
 
@@ -57,7 +65,7 @@ void Object::animate(float deltatime) {
         time = 0;
     }
 
-    currentRect.y = static_cast<int>(y) + h * frame;
+    currentRect.y = h * frame;
     currentSprite = sprites.getSpritesheet();
 }
 

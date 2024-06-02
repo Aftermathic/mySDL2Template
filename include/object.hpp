@@ -14,6 +14,8 @@ class Object {
 
         void setX(float p_x);
         void setY(float p_y);
+        float getdX();
+        float getdY();
 
         int getCurrentFrame();
 
@@ -28,12 +30,16 @@ class Object {
 
     private:
         float x, y;
+        float dstX, dstY;
         int w, h;
         float animationRate;
+
         float time;
-        int originalHeight;
         int frame;
+        int originalHeight;
+
         SDL_Texture* currentSprite;
         SDL_Rect currentRect;
+
         Spritesheet sprites;
 };
